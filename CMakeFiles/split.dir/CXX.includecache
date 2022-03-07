@@ -6,9 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/Users/gjy/JK_Contest/exchange-simulation/common.h
-
-/Users/gjy/JK_Contest/exchange-simulation/split/split.cpp
+/Users/gjy/JK_Contest/split/split.cpp
 iostream
 -
 cstring
@@ -16,9 +14,7 @@ cstring
 bits/stdc++.h
 -
 H5Cpp.h
-/Users/gjy/JK_Contest/exchange-simulation/split/H5Cpp.h
-../common.h
-/Users/gjy/JK_Contest/exchange-simulation/common.h
+/Users/gjy/JK_Contest/split/H5Cpp.h
 
 /usr/local/Cellar/hdf5/1.12.0_1/include/H5ACpublic.h
 H5public.h

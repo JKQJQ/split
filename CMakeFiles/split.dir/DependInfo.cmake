@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/gjy/JK_Contest/exchange-simulation/split/split.cpp" "/Users/gjy/JK_Contest/exchange-simulation/split/CMakeFiles/split.dir/split.cpp.o"
+  "/Users/gjy/JK_Contest/split/split.cpp" "/Users/gjy/JK_Contest/split/CMakeFiles/split.dir/split.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "Clang")
 
