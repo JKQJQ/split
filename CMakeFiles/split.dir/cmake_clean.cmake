@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/split.dir/split.cpp.o"
+  "CMakeFiles/split.dir/split.cpp.o.d"
   "split"
   "split.pdb"
 )
