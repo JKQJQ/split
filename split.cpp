@@ -187,7 +187,7 @@ void OutputOrderBinaryFile(int stk_id) {
 
 
 void OutputIntBinaryFile(vector<int> &V, string file_name) {
-  string binary_file_path = output_prefix_path + "trade/" + file_name; 
+  string binary_file_path = output_prefix_path + "trade" + trade_id + "/" + file_name; 
   std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
   for (auto v : V) {
     outfile.write((char *)(&v), sizeof(int));
