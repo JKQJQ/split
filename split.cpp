@@ -27,7 +27,16 @@ void CountintSort() {
   }
 }
 
-
+void OutputOrder(Order order) {
+  int order_id = order.order_id;
+  int price = (order.price) * 1000;
+  int volume = order.volume;
+  char ch = order.combined;
+  int dir = ((ch >> 3) & 1) ? 1 : 2;
+  int type = (ch & 7);
+  int stk_code = ch >> 4; 
+  cout << order_id << " " << price << " " << volume << " " << stk_code << " " << dir <<" " << type << endl;
+}
 void ReadHdf5Int(
   string dataset_name, 
   string csv_name, 
@@ -174,10 +183,14 @@ void ReadHdf5Double(string dataset_name, string id, int NX, int NY, int NZ) {
 }
 
 void OutputOrderBinaryFile(int stk_id) {
+  cout <<"???"<<endl;
  // FILE *fid;
   string binary_file_path = output_prefix_path + "trade" + trade_id + "/" "stock" + to_string(stk_id);
   //fid = fopen(binary_file_path.c_str(),"wb");
   std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
+    for (int j = 0; j < 3; ++j) {
+      OutputOrder(order_stk[stk_id][j]);
+    }
   for (auto order : order_stk[stk_id]) {
     outfile.write((char *)(&order), sizeof(Order));
   }
@@ -208,11 +221,11 @@ int main(int argc,char **argv) {
   ReadHdf5Int("price", "prev_close", trade_id, kStkN, 1, 1);
   ReadHdf5Int("hook", "hook", "", kStkN, 100, 4);
   CountintSort();
-  for (int i = 0; i < 1; ++i) 
-    for (int j = 0; j < 10; ++j) {
-      Order o = order_stk[i][j];
-      cout << o.price << " " << (int)o.combined << " " << o.order_id << endl;
-    }
+  //for (int i = 0; i < 1; ++i) 
+    //for (int j = 0; j < 10; ++j) {
+      //Order o = order_stk[i][j];
+      //cout << o.price << " " << (int)o.combined << " " << o.order_id << endl;
+    //}
   for (int i = 0; i < kStkN; ++i)
     OutputOrderBinaryFile(i);
   OutputIntBinaryFile(prev_close, "prev_price");

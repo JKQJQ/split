@@ -10,5 +10,5 @@ struct Order {
     int order_id;
     int price;
     int volume;
-    char combined;
+    unsigned char combined;
 }__attribute__((packed));
