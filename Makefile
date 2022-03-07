@@ -130,6 +130,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named merge
+
+# Build rule for target.
+merge: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 merge
+.PHONY : merge
+
+# fast build rule for target.
+merge/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/merge.dir/build.make CMakeFiles/merge.dir/build
+.PHONY : merge/fast
+
+#=============================================================================
 # Target rules for targets named split
 
 # Build rule for target.
@@ -141,6 +154,33 @@ split: cmake_check_build_system
 split/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/split.dir/build.make CMakeFiles/split.dir/build
 .PHONY : split/fast
+
+merge.o: merge.cpp.o
+
+.PHONY : merge.o
+
+# target to build an object file
+merge.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/merge.dir/build.make CMakeFiles/merge.dir/merge.cpp.o
+.PHONY : merge.cpp.o
+
+merge.i: merge.cpp.i
+
+.PHONY : merge.i
+
+# target to preprocess a source file
+merge.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/merge.dir/build.make CMakeFiles/merge.dir/merge.cpp.i
+.PHONY : merge.cpp.i
+
+merge.s: merge.cpp.s
+
+.PHONY : merge.s
+
+# target to generate assembly for a file
+merge.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/merge.dir/build.make CMakeFiles/merge.dir/merge.cpp.s
+.PHONY : merge.cpp.s
 
 split.o: split.cpp.o
 
@@ -177,7 +217,11 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... merge"
 	@echo "... split"
+	@echo "... merge.o"
+	@echo "... merge.i"
+	@echo "... merge.s"
 	@echo "... split.o"
 	@echo "... split.i"
 	@echo "... split.s"

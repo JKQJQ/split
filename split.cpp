@@ -2,15 +2,10 @@
 #include <cstring>
 #include <bits/stdc++.h>
 #include "H5Cpp.h"
-
+#include "common.h"
 using namespace H5;
 using namespace std;
 
-
-
-
-const H5std_string FILE_NAME("/Users/gjy/JK_Contest/exchange-simulation/100x10x10/order_id1.h5");
-const H5std_string DATASET_NAME("order_id");
 
 const int NX = 500;
 const int NY = 10;
@@ -20,12 +15,7 @@ const int RANK_OUT = 3;
 string prefix_path = "/Users/gjy/JK_Contest/split/100x10x10/";
 string output_prefix_path = "/Users/gjy/JK_Contest/split/";
 string trade_id = "1";
-struct Order {
-    int order_id;
-    int price;
-    int volume;
-    char combined;
-}__attribute__((packed));
+
 vector<vector<Order>> order_stk(kStkN, vector<Order>(NX * NY * NZ / kStkN));
 vector<int> prev_close(kStkN);
 void CountintSort() {
@@ -183,14 +173,15 @@ void ReadHdf5Double(string dataset_name, string id, int NX, int NY, int NZ) {
 }
 
 void OutputOrderBinaryFile(int stk_id) {
-  FILE *fid;
+ // FILE *fid;
   string binary_file_path = output_prefix_path + "trade" + trade_id + "/" "stock" + to_string(stk_id);
-  cout << binary_file_path << endl;
-  fid = fopen(binary_file_path.c_str(),"wb");
+  //fid = fopen(binary_file_path.c_str(),"wb");
+  std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
   for (auto order : order_stk[stk_id]) {
-    fwrite(&order,sizeof(Order),1,fid);
+    outfile.write((char *)(&order), sizeof(Order));
   }
-  fclose(fid);
+  //fclose(fid);
+  outfile.close(); 
 }
 
 
@@ -204,6 +195,7 @@ void OutputPrevCloseBinaryFile() {
   }
   fclose(fid);
 }
+
 int main(int argc,char **argv) {
   
   prefix_path = argv[1];

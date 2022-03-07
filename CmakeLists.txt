@@ -9,6 +9,7 @@ include_directories(
 )
 
 add_executable(split split.cpp)
+add_executable(merge merge.cpp)
 target_link_libraries(split 
     ${HDF5_LIBRARIES}
 )

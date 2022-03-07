@@ -6,6 +6,8 @@
 
 #IncludeRegexTransform: 
 
+/Users/gjy/JK_Contest/split/common.h
+
 /Users/gjy/JK_Contest/split/split.cpp
 iostream
 -
@@ -15,6 +17,8 @@ bits/stdc++.h
 -
 H5Cpp.h
 /Users/gjy/JK_Contest/split/H5Cpp.h
+common.h
+/Users/gjy/JK_Contest/split/common.h
 
 /usr/local/Cellar/hdf5/1.12.0_1/include/H5ACpublic.h
 H5public.h

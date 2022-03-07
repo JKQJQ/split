@@ -1,3 +1,4 @@
 /Users/gjy/JK_Contest/split/CMakeFiles/rebuild_cache.dir
 /Users/gjy/JK_Contest/split/CMakeFiles/edit_cache.dir
+/Users/gjy/JK_Contest/split/CMakeFiles/merge.dir
 /Users/gjy/JK_Contest/split/CMakeFiles/split.dir

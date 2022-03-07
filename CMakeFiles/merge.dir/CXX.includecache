@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/gjy/JK_Contest/split/common.h
+
+/Users/gjy/JK_Contest/split/merge.cpp
+bits/stdc++.h
+-
+common.h
+/Users/gjy/JK_Contest/split/common.h
+
