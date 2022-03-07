@@ -1,4 +1,4 @@
-struct trade {
+struct Trade {
     int stk_code;
     int bid_id;
     int ask_id;
@@ -6,7 +6,7 @@ struct trade {
     int volume;
 }__attribute__((packed));
 
-struct order {
+struct Order {
     int order_id;
     int price;
     int volume;

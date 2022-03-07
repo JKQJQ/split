@@ -2,7 +2,7 @@
 #include <cstring>
 #include <bits/stdc++.h>
 #include "H5Cpp.h"
-
+#include "common.h"
 using namespace H5;
 using namespace std;
 
@@ -172,14 +172,15 @@ void ReadHdf5Double(string dataset_name, string id, int NX, int NY, int NZ) {
 }
 
 void OutputOrderBinaryFile(int stk_id) {
-  FILE *fid;
+ // FILE *fid;
   string binary_file_path = output_prefix_path + "trade" + trade_id + "/" "stock" + to_string(stk_id);
-  cout << binary_file_path << endl;
-  fid = fopen(binary_file_path.c_str(),"wb");
+  //fid = fopen(binary_file_path.c_str(),"wb");
+  std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
   for (auto order : order_stk[stk_id]) {
-    fwrite(&order,sizeof(Order),1,fid);
+    outfile.write((char *)(&order), sizeof(Order));
   }
-  fclose(fid);
+  //fclose(fid);
+  outfile.close(); 
 }
 
 
@@ -193,6 +194,7 @@ void OutputPrevCloseBinaryFile() {
   }
   fclose(fid);
 }
+
 int main(int argc,char **argv) {
   
   prefix_path = argv[1];

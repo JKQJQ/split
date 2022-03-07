@@ -1,3 +1,10 @@
+<<<<<<< HEAD
 /home/team-10/split/CMakeFiles/rebuild_cache.dir
 /home/team-10/split/CMakeFiles/split.dir
 /home/team-10/split/CMakeFiles/edit_cache.dir
+=======
+/Users/gjy/JK_Contest/split/CMakeFiles/rebuild_cache.dir
+/Users/gjy/JK_Contest/split/CMakeFiles/edit_cache.dir
+/Users/gjy/JK_Contest/split/CMakeFiles/merge.dir
+/Users/gjy/JK_Contest/split/CMakeFiles/split.dir
+>>>>>>> 8e0024e13a89938e2b49a82c670ae79dfa4a9304
