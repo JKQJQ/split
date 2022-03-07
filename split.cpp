@@ -18,6 +18,7 @@ const int NZ = 10;
 const int kStkN = 10;
 const int RANK_OUT = 3;
 string prefix_path = "/Users/gjy/JK_Contest/split/100x10x10/";
+string output_prefix_path = "/Users/gjy/JK_Contest/split/";
 string trade_id = "1";
 struct Order {
     int order_id;
@@ -183,7 +184,8 @@ void ReadHdf5Double(string dataset_name, string id, int NX, int NY, int NZ) {
 
 void OutputOrderBinaryFile(int stk_id) {
   FILE *fid;
-  string binary_file_path = prefix_path + trade_id + "/" "stock" + to_string(stk_id);
+  string binary_file_path = output_prefix_path + "trade" + trade_id + "/" "stock" + to_string(stk_id);
+  cout << binary_file_path << endl;
   fid = fopen(binary_file_path.c_str(),"wb");
   for (auto order : order_stk[stk_id]) {
     fwrite(&order,sizeof(Order),1,fid);
@@ -194,7 +196,7 @@ void OutputOrderBinaryFile(int stk_id) {
 
 void OutputPrevCloseBinaryFile() {
   FILE *fid;
-  string binary_file_path = prefix_path + trade_id + "/"  + "prev_price";
+  string binary_file_path = output_prefix_path + "trade" + trade_id + "/"  + "prev_price";
   fid = fopen(binary_file_path.c_str(),"wb");
   for (auto price : prev_close) {
     fwrite(&price,sizeof(int),1,fid);
@@ -206,6 +208,7 @@ int main(int argc,char **argv) {
   
   prefix_path = argv[1];
   trade_id = argv[2];
+  output_prefix_path = argv[3];
   vector<string> dataset_name_vec{"order_id", "direction", "type", "volume"};
     
   for (auto dataset_name : dataset_name_vec)
