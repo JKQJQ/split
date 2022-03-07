@@ -195,7 +195,6 @@ void OutputOrderBinaryFile(int stk_id) {
 void OutputPrevCloseBinaryFile() {
   FILE *fid;
   string binary_file_path = prefix_path + trade_id + "/"  + "prev_price";
-  cout <<  binary_file_path<<endl;
   fid = fopen(binary_file_path.c_str(),"wb");
   for (auto price : prev_close) {
     fwrite(&price,sizeof(int),1,fid);
