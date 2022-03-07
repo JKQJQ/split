@@ -7,3 +7,4 @@ make
 ./split "${prefix_path}100x10x10/" "2" "${prefix_path}team-10/"
 ./merge "${prefix_path}team-10/"
 cp "${prefix_path}team-10/trade1/prev_price" "${prefix_path}team-10/trade_merge/prev_price" 
+cp "${prefix_path}team-10/trade1/hook" "${prefix_path}team-10/trade_merge/hook" 
