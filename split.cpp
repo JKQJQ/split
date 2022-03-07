@@ -6,6 +6,7 @@
 using namespace H5;
 using namespace std;
 
+
 const int NX = 500;
 const int NY = 10;
 const int NZ = 10; 
@@ -17,6 +18,7 @@ string trade_id = "1";
 
 vector<vector<Order>> order_stk(kStkN, vector<Order>(NX * NY * NZ / kStkN));
 vector<int> prev_close(kStkN);
+vector<int> hook(kStkN * 100 * 4);
 void CountintSort() {
   for (int i = 0; i < kStkN; ++i) {
     sort(order_stk[i].begin(), order_stk[i].end(), [&](Order order1, Order order2) {
@@ -35,7 +37,6 @@ void ReadHdf5Int(
   int NZ
   ) {
   string path = prefix_path + dataset_name + id + ".h5";
-  cout << path << " " << prefix_path << " " << dataset_name << endl;
   H5std_string FILE_NAME(path);
   H5std_string DATASET_NAME(csv_name);
   int size = NX * NY * NZ;
@@ -98,6 +99,7 @@ void ReadHdf5Int(
       if (csv_name == "direction") order_stk[i][j].combined |= (stk[i][j] == 1?1:0) << 3;
       if (csv_name == "type") order_stk[i][j].combined |= stk[i][j];
       if (csv_name == "prev_close") prev_close[i] = stk[i][j];
+      if (csv_name == "hook") hook[i * 100 * 4 + j] = stk[i][j];
     }
   }
   delete[] data_read;  
@@ -184,15 +186,13 @@ void OutputOrderBinaryFile(int stk_id) {
 }
 
 
-void OutputPrevCloseBinaryFile() {
-  FILE *fid;
-  string binary_file_path = output_prefix_path + "trade" + trade_id + "/"  + "prev_price";
-  fid = fopen(binary_file_path.c_str(),"wb");
-  for (auto price : prev_close) {
-    fwrite(&price,sizeof(int),1,fid);
-    cout << price << endl;
+void OutputIntBinaryFile(vector<int> &V, string file_name) {
+  string binary_file_path = output_prefix_path + "trade/" + file_name; 
+  std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
+  for (auto v : V) {
+    outfile.write((char *)(&v), sizeof(int));
   }
-  fclose(fid);
+  outfile.close(); 
 }
 
 int main(int argc,char **argv) {
@@ -205,7 +205,8 @@ int main(int argc,char **argv) {
   for (auto dataset_name : dataset_name_vec)
     ReadHdf5Int(dataset_name, dataset_name, trade_id, NX, NY, NZ);
   ReadHdf5Double("price", trade_id, NX, NY, NZ);
-  ReadHdf5Int("price", "prev_close", trade_id, 10, 1, 1);
+  ReadHdf5Int("price", "prev_close", trade_id, kStkN, 1, 1);
+  ReadHdf5Int("hook", "hook", "", kStkN, 100, 4);
   CountintSort();
   for (int i = 0; i < 1; ++i) 
     for (int j = 0; j < 10; ++j) {
@@ -214,7 +215,9 @@ int main(int argc,char **argv) {
     }
   for (int i = 0; i < kStkN; ++i)
     OutputOrderBinaryFile(i);
-  OutputPrevCloseBinaryFile();
+  OutputIntBinaryFile(prev_close, "prev_price");
+  OutputIntBinaryFile(hook, "hook");
+  for (int i = 0; i < 10; ++i) cout << hook[i] << endl;
   return 0;
 }
 
