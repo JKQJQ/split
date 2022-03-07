@@ -63,8 +63,8 @@ CMAKE_BINARY_DIR = /home/team-10/split
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/merge.dir/all
 all: CMakeFiles/split.dir/all
+all: CMakeFiles/merge.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -72,36 +72,9 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/merge.dir/clean
 clean: CMakeFiles/split.dir/clean
+clean: CMakeFiles/merge.dir/clean
 .PHONY : clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/merge.dir
-
-# All Build rule for target.
-CMakeFiles/merge.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/merge.dir/build.make CMakeFiles/merge.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/merge.dir/build.make CMakeFiles/merge.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/gjy/JK_Contest/split/CMakeFiles --progress-num=1,2 "Built target merge"
-.PHONY : CMakeFiles/merge.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/merge.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/gjy/JK_Contest/split/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/merge.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/gjy/JK_Contest/split/CMakeFiles 0
-.PHONY : CMakeFiles/merge.dir/rule
-
-# Convenience name for target.
-merge: CMakeFiles/merge.dir/rule
-
-.PHONY : merge
-
-# clean rule for target.
-CMakeFiles/merge.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/merge.dir/build.make CMakeFiles/merge.dir/clean
-.PHONY : CMakeFiles/merge.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/split.dir
@@ -110,11 +83,7 @@ CMakeFiles/merge.dir/clean:
 CMakeFiles/split.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/split.dir/build.make CMakeFiles/split.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/split.dir/build.make CMakeFiles/split.dir/build
-<<<<<<< HEAD
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/team-10/split/CMakeFiles --progress-num=1,2 "Built target split"
-=======
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/gjy/JK_Contest/split/CMakeFiles --progress-num=3,4 "Built target split"
->>>>>>> 8e0024e13a89938e2b49a82c670ae79dfa4a9304
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/team-10/split/CMakeFiles --progress-num=3,4 "Built target split"
 .PHONY : CMakeFiles/split.dir/all
 
 # Build rule for subdir invocation for target.
@@ -132,6 +101,32 @@ split: CMakeFiles/split.dir/rule
 CMakeFiles/split.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/split.dir/build.make CMakeFiles/split.dir/clean
 .PHONY : CMakeFiles/split.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/merge.dir
+
+# All Build rule for target.
+CMakeFiles/merge.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/merge.dir/build.make CMakeFiles/merge.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/merge.dir/build.make CMakeFiles/merge.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/team-10/split/CMakeFiles --progress-num=1,2 "Built target merge"
+.PHONY : CMakeFiles/merge.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/merge.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/team-10/split/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/merge.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/team-10/split/CMakeFiles 0
+.PHONY : CMakeFiles/merge.dir/rule
+
+# Convenience name for target.
+merge: CMakeFiles/merge.dir/rule
+.PHONY : merge
+
+# clean rule for target.
+CMakeFiles/merge.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/merge.dir/build.make CMakeFiles/merge.dir/clean
+.PHONY : CMakeFiles/merge.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

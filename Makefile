@@ -117,19 +117,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named merge
-
-# Build rule for target.
-merge: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 merge
-.PHONY : merge
-
-# fast build rule for target.
-merge/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/merge.dir/build.make CMakeFiles/merge.dir/build
-.PHONY : merge/fast
-
-#=============================================================================
 # Target rules for targets named split
 
 # Build rule for target.
@@ -142,8 +129,20 @@ split/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/split.dir/build.make CMakeFiles/split.dir/build
 .PHONY : split/fast
 
-merge.o: merge.cpp.o
+#=============================================================================
+# Target rules for targets named merge
 
+# Build rule for target.
+merge: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 merge
+.PHONY : merge
+
+# fast build rule for target.
+merge/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/merge.dir/build.make CMakeFiles/merge.dir/build
+.PHONY : merge/fast
+
+merge.o: merge.cpp.o
 .PHONY : merge.o
 
 # target to build an object file
@@ -152,7 +151,6 @@ merge.cpp.o:
 .PHONY : merge.cpp.o
 
 merge.i: merge.cpp.i
-
 .PHONY : merge.i
 
 # target to preprocess a source file
@@ -161,7 +159,6 @@ merge.cpp.i:
 .PHONY : merge.cpp.i
 
 merge.s: merge.cpp.s
-
 .PHONY : merge.s
 
 # target to generate assembly for a file
