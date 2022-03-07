@@ -6,12 +6,6 @@
 using namespace H5;
 using namespace std;
 
-
-
-
-const H5std_string FILE_NAME("/Users/gjy/JK_Contest/exchange-simulation/100x10x10/order_id1.h5");
-const H5std_string DATASET_NAME("order_id");
-
 const int NX = 500;
 const int NY = 10;
 const int NZ = 10; 
@@ -20,12 +14,7 @@ const int RANK_OUT = 3;
 string prefix_path = "/Users/gjy/JK_Contest/split/100x10x10/";
 string output_prefix_path = "/Users/gjy/JK_Contest/split/";
 string trade_id = "1";
-struct Order {
-    int order_id;
-    int price;
-    int volume;
-    char combined;
-}__attribute__((packed));
+
 vector<vector<Order>> order_stk(kStkN, vector<Order>(NX * NY * NZ / kStkN));
 vector<int> prev_close(kStkN);
 void CountintSort() {
