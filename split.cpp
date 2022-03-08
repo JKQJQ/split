@@ -107,7 +107,7 @@ void ReadHdf5Int(
       if (csv_name == "volume") order_stk[i][j].volume = stk[i][j];
       if (csv_name == "direction") order_stk[i][j].combined |= (stk[i][j] == 1?1:0) << 3;
       if (csv_name == "type") order_stk[i][j].combined |= stk[i][j];
-      if (csv_name == "prev_close") prev_close[i] = stk[i][j];
+      if (csv_name == "prev_close") prev_close[i] = round(stk[i][j] * 100);
       if (csv_name == "hook") hook[i * 100 * 4 + j] = stk[i][j];
     }
   }
@@ -175,7 +175,7 @@ void ReadHdf5Double(string dataset_name, string id, int NX, int NY, int NZ) {
     for (int j = 0; j < stk[i].size(); ++j) {
       if (dataset_name == "price") {
         order_stk[i][j].combined |=  i << 4;
-        order_stk[i][j].price = (int)stk[i][j] * 100; //floor 0.01
+        order_stk[i][j].price = round(stk[i][j] * 100); //floor 0.01
       }
     }
   }
@@ -183,10 +183,7 @@ void ReadHdf5Double(string dataset_name, string id, int NX, int NY, int NZ) {
 }
 
 void OutputOrderBinaryFile(int stk_id) {
-  cout <<"???"<<endl;
- // FILE *fid;
   string binary_file_path = output_prefix_path + "trade" + trade_id + "/" "stock" + to_string(stk_id);
-  //fid = fopen(binary_file_path.c_str(),"wb");
   std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
     for (int j = 0; j < 3; ++j) {
       OutputOrder(order_stk[stk_id][j]);
