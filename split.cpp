@@ -8,15 +8,15 @@ using namespace std;
 
 
 const int NX = 500;
-const int NY = 10;
-const int NZ = 10; 
+int NY = 1000;
+int NZ = 1000; 
 const int kStkN = 10;
 const int RANK_OUT = 3;
 string prefix_path = "/Users/gjy/JK_Contest/split/100x10x10/";
 string output_prefix_path = "/Users/gjy/JK_Contest/split/";
 string trade_id = "1";
 
-vector<vector<Order>> order_stk(kStkN, vector<Order>(NX * NY * NZ / kStkN));
+vector<vector<Order>> order_stk;
 vector<int> prev_close(kStkN);
 vector<int> hook(kStkN * 100 * 4);
 void CountintSort() {
@@ -210,6 +210,9 @@ int main(int argc,char **argv) {
   prefix_path = argv[1];
   trade_id = argv[2];
   output_prefix_path = argv[3];
+  NY = atoi(argv[4]);
+  NZ = atoi(argv[5]);
+  order_stk = vector<vector<Order>>(kStkN, vector<Order>(NX * NY * NZ / kStkN));
   vector<string> dataset_name_vec{"order_id", "direction", "type", "volume"};
     
   for (auto dataset_name : dataset_name_vec)
@@ -218,11 +221,7 @@ int main(int argc,char **argv) {
   ReadHdf5Int("price", "prev_close", trade_id, kStkN, 1, 1);
   ReadHdf5Int("hook", "hook", "", kStkN, 100, 4);
   CountintSort();
-  //for (int i = 0; i < 1; ++i) 
-    //for (int j = 0; j < 10; ++j) {
-      //Order o = order_stk[i][j];
-      //cout << o.price << " " << (int)o.combined << " " << o.order_id << endl;
-    //}
+
   for (int i = 0; i < kStkN; ++i)
     OutputOrderBinaryFile(i);
   OutputIntBinaryFile(prev_close, "prev_price");

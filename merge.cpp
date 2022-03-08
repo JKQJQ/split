@@ -5,10 +5,10 @@ using namespace std;
 
 
 const int NX = 500;
-const int NY = 10;
-const int NZ = 10; 
+int NY = 10;
+int NZ = 10; 
 const int kStkN = 10;
-const int kN = NX * NY * NZ / kStkN;
+int kN = NX * NY * NZ / kStkN;
 vector<int> prev_close(kStkN);
 Order* order_stk[2]; 
 void OutputOrder(Order order, bool flag) {
@@ -79,6 +79,10 @@ void Merge(Order* order_stk1, Order* order_stk2, string file_path, int stk_id) {
 
 int main(int argc, char **argv) {
   string prefix_path = argv[1];  //"/Users/gjy/JK_Contest/split/";
+  NY = atoi(argv[2]);
+  NZ = atoi(argv[3]);
+  kN = NX * NY * NZ / kStkN;
+
   string path1 = prefix_path + "trade1/";
   string path2 = prefix_path + "trade2/";       
   string output_path = prefix_path + "trade_merge/";
