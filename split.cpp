@@ -10,7 +10,9 @@ using namespace std;
 const int NX = 500;
 int NY = 1000;
 int NZ = 1000; 
+
 const int kStkN = 10;
+int kN = NX * NY * NZ / kStkN;
 const int RANK_OUT = 3;
 string prefix_path = "/Users/gjy/JK_Contest/split/100x10x10/";
 string output_prefix_path = "/Users/gjy/JK_Contest/split/";
@@ -19,14 +21,31 @@ string trade_id = "1";
 vector<vector<Order>> order_stk;
 vector<int> prev_close(kStkN);
 vector<int> hook(kStkN * 100 * 4);
-void CountintSort() {
+void QuickSort() {
   for (int i = 0; i < kStkN; ++i) {
     sort(order_stk[i].begin(), order_stk[i].end(), [&](Order order1, Order order2) {
       return order1.order_id < order2.order_id;
     });
   }
 }
-
+void CountintSort() {
+  for (int i = 0; i < kStkN; ++i) {
+    vector<int> address(kN * 2 + 1, -1);
+    for (int j = 0; j < order_stk[i].size(); ++j) {
+      #ifdef Test
+        assert(address[order_stk[i][j].order_id] == 0);
+      #endif
+      address[order_stk[i][j].order_id] = j; //address[3] = 0
+    }
+    vector<Order> tmp = order_stk[i];
+    int k = 0;
+    for (int j = 1; j <= kN * 2; ++j) {
+      if (address[j] == -1) continue;
+      order_stk[i][k++] = tmp[address[j]]; 
+    }
+    assert(k == kN);   
+  }
+}
 void OutputOrder(Order order) {
   int order_id = order.order_id;
   int price = (order.price) * 1000;
@@ -191,7 +210,6 @@ void OutputOrderBinaryFile(int stk_id) {
   for (auto order : order_stk[stk_id]) {
     outfile.write((char *)(&order), sizeof(Order));
   }
-  //fclose(fid);
   outfile.close(); 
 }
 
@@ -212,7 +230,8 @@ int main(int argc,char **argv) {
   output_prefix_path = argv[3];
   NY = atoi(argv[4]);
   NZ = atoi(argv[5]);
-  order_stk = vector<vector<Order>>(kStkN, vector<Order>(NX * NY * NZ / kStkN));
+  kN = NX * NY * NZ / kStkN;
+  order_stk = vector<vector<Order>>(kStkN, vector<Order>(kN));
   vector<string> dataset_name_vec{"order_id", "direction", "type", "volume"};
     
   for (auto dataset_name : dataset_name_vec)

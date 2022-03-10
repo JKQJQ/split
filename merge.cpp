@@ -95,7 +95,7 @@ int main(int argc, char **argv) {
     ReadOrderBinaryFile(path2, order_stk[1], i); 
     Merge(order_stk[0], order_stk[1], output_path, i);
     for (int j = 0; j < 2; ++j) {
-        delete order_stk[j];
+        delete[] order_stk[j];
     }
   }
 
