@@ -27,5 +27,5 @@ make
 ./split "${prefix_path}100x${N}x${N}/" "2" "${prefix_path}${data_path}" "${N}" "${N}"
 
 ./merge "${prefix_path}${data_path}" "${N}" "${N}"
-cp "${prefix_path}${data_path}trade1/prev_price" "${prefix_path}${data_path}trade_merge/prev_price" 
-cp "${prefix_path}${data_path}trade1/hook" "${prefix_path}${data_path}trade_merge/hook" 
+cp "${prefix_path}${data_path}order1/prev_price" "${prefix_path}${data_path}order_merge/prev_price" 
+cp "${prefix_path}${data_path}order1/hook" "${prefix_path}${data_path}order_merge/hook" 

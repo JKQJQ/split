@@ -11,32 +11,17 @@ const int kStkN = 10;
 int kN = NX * NY * NZ / kStkN;
 vector<int> prev_close(kStkN);
 Order* order_stk[2]; 
-void OutputOrder(Order order, bool flag) {
-  int order_id = order.order_id;
-  int price = (order.price) * 1000;
-  int volume = order.volume;
-  unsigned char ch = order.combined;
-  int dir = ((ch >> 3) & 1) ? 1 : 2;
-  int type = (ch & 7);
-  int stk_code = ch >> 4; 
-  assert(order_id >= 1 && order_id <= kN * 2);
-  assert(price >= 0);
-  assert(volume >= 0);
-  assert(dir == 1 || dir == 2);
-  assert(type >= 0 && type < 6);
-  assert(stk_code >= 0 && stk_code < 10);
-  if  (flag) {
-    cout << order_id << " " << price << " " << volume << " " << stk_code << " " << dir <<" " << type << endl;
+
+void ReadOrderBinaryFile(string file_path, Order* order_stk, int id) {
+  int length = kN / kSplitN;
+  for (int i = 0; i < kSplitN; ++i) {
+      string stk_file_path = file_path + "stock" + to_string(id) + "_" + to_string(i + 1);
+      cout << "stk_file_path=" << stk_file_path << endl;
+      std::ifstream infile(stk_file_path, std::ios::in | std::ios::binary);
+      infile.read((char *)(order_stk + length * i), sizeof(Order) * length);
+      infile.close();
   }
-}
-void ReadOrderBinaryFile(string file_path, Order* order_stk, int i) {
 
-
-  string stk_file_path = file_path + "stock" + to_string(i);
-
-  std::ifstream infile(stk_file_path, std::ios::in | std::ios::binary);
-  infile.read((char *)order_stk, sizeof(Order) * kN);
-  infile.close();
 }
 void Merge(Order* order_stk1, Order* order_stk2, string file_path, int stk_id) {
   Order* merge_order_stk = new Order[kN * 2];
@@ -68,7 +53,7 @@ void Merge(Order* order_stk1, Order* order_stk2, string file_path, int stk_id) {
   assert(k == kN * 2);
   for (i = 0; i < kN * 2; ++i) {
     bool output_flag = i < 3;
-    OutputOrder(merge_order_stk[i], output_flag);
+    OutputOrder(merge_order_stk[i], output_flag, kN);
   }
   string stk_file_path = file_path + "stock" + to_string(stk_id);
   std::ofstream outfile(stk_file_path, std::ios::out | std::ios::binary);
@@ -83,9 +68,9 @@ int main(int argc, char **argv) {
   NZ = atoi(argv[3]);
   kN = NX * NY * NZ / kStkN;
 
-  string path1 = prefix_path + "trade1/";
-  string path2 = prefix_path + "trade2/";       
-  string output_path = prefix_path + "trade_merge/";
+  string path1 = prefix_path + "order1/";
+  string path2 = prefix_path + "order2/";       
+  string output_path = prefix_path + "order_merge/";
 
   for (int i = 0; i < kStkN; ++i) { 
     for (int j = 0; j < 2; ++j) {

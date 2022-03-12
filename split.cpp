@@ -46,16 +46,7 @@ void CountintSort() {
     assert(k == kN);   
   }
 }
-void OutputOrder(Order order) {
-  int order_id = order.order_id;
-  int price = (order.price) * 1000;
-  int volume = order.volume;
-  char ch = order.combined;
-  int dir = ((ch >> 3) & 1) ? 1 : 2;
-  int type = (ch & 7);
-  int stk_code = ch >> 4; 
-  cout << order_id << " " << price << " " << volume << " " << stk_code << " " << dir <<" " << type << endl;
-}
+
 void ReadHdf5Int(
   string dataset_name, 
   string csv_name, 
@@ -202,20 +193,30 @@ void ReadHdf5Double(string dataset_name, string id, int NX, int NY, int NZ) {
 }
 
 void OutputOrderBinaryFile(int stk_id) {
-  string binary_file_path = output_prefix_path + "trade" + trade_id + "/" "stock" + to_string(stk_id);
-  std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
-    for (int j = 0; j < 3; ++j) {
-      OutputOrder(order_stk[stk_id][j]);
+  #ifdef Test
+    for (int i = 0; i < kN; ++i) {
+      bool output_flag = i < 3;
+      OutputOrder(order_stk[stk_id][i], output_flag, kN);
     }
-  for (auto order : order_stk[stk_id]) {
-    outfile.write((char *)(&order), sizeof(Order));
+  #endif
+  assert(order_stk[stk_id].size() == kN);
+  assert(kN % kSplitN == 0);
+  int length = kN / kSplitN;
+  for (int i = 0; i < kSplitN; ++i) {
+    string binary_file_path = output_prefix_path + "order" + trade_id + "/" "stock" + to_string(stk_id) +  "_" + to_string(i + 1);
+    cout << "binary_file_path=" << binary_file_path << endl;
+    std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
+
+
+    outfile.write((char *)(&order_stk[stk_id][length * i]), sizeof(Order) * length);
+    outfile.close(); 
   }
-  outfile.close(); 
+
 }
 
 
 void OutputIntBinaryFile(vector<int> &V, string file_name) {
-  string binary_file_path = output_prefix_path + "trade" + trade_id + "/" + file_name; 
+  string binary_file_path = output_prefix_path + "order" + trade_id + "/" + file_name; 
   std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
   for (auto v : V) {
     outfile.write((char *)(&v), sizeof(int));
@@ -239,7 +240,7 @@ int main(int argc,char **argv) {
   ReadHdf5Double("price", trade_id, NX, NY, NZ);
   ReadHdf5Int("price", "prev_close", trade_id, kStkN, 1, 1);
   ReadHdf5Int("hook", "hook", "", kStkN, 100, 4);
-  CountintSort();
+  QuickSort();
 
   for (int i = 0; i < kStkN; ++i)
     OutputOrderBinaryFile(i);
