@@ -25,3 +25,17 @@ make
 ./split "${prefix_path}100x${N}x${N}/" "1" "${prefix_path}${data_path}" "${N}" "${N}"
 #./split "${prefix_path}100x${N}x${N}/" "2" "${prefix_path}${data_path}" "${N}" "${N}"
 
+
+zstd -T4 /data/team-10/large/test1/stock* --output-dir-flat /data/team-10/large/test1_compress/
+path="${prefix_path}${data_path}test1_compress/"
+cd ${path}
+
+rm -rf *.success
+for ((i=1;i < 11; i++))
+do
+    for ((j=1;j < 51; j++))
+    do
+        touch "stock${i}_${j}.zst.success"
+        echo success > "stock${i}_${j}.zst.success"
+    done
+done

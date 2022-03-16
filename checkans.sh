@@ -1,3 +1,6 @@
+
+
+
 data_path="team-10/"
 echo "Enter Your File Path:"
 prefix_path='/data/'
@@ -14,6 +17,21 @@ fi
 if  [ "$Size" == "large" ]
 then N="1000"
 fi
+
+
+zstd -T4 -D --decompress /data/team-10/large/test2_compress/* --output-dir-flat /data/team-10/large/test2/
+path="${prefix_path}${data_path}test2/"
+cd ${path}
+rm -rf *.zst
+rm -rf *.success
+for ((i=1;i < 11; i++))
+do
+    for ((j=1;j < 51; j++))
+    do
+        touch "stock${i}_${j}.zst.success"
+        echo success > "stock${i}_${j}.zst.success"
+    done
+done
 
 cmake .
 make
