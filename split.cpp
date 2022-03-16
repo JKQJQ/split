@@ -3,6 +3,7 @@
 #include <bits/stdc++.h>
 #include "H5Cpp.h"
 #include "common.h"
+// #include "split.h"
 using namespace H5;
 using namespace std;
 
@@ -28,12 +29,12 @@ void QuickSort() {
     });
   }
 }
-void CountintSort() {
+void CountingSort() {
   for (int i = 0; i < kStkN; ++i) {
     vector<int> address(kN * 2 + 1, -1);
     for (int j = 0; j < order_stk[i].size(); ++j) {
       #ifdef Test
-        assert(address[order_stk[i][j].order_id] == 0);
+        assert(address[order_stk[i][j].order_id] == -1);
       #endif
       address[order_stk[i][j].order_id] = j; //address[3] = 0
     }
@@ -124,11 +125,11 @@ void ReadHdf5Int(
   delete[] data_read;  
 }
 
-void ReadHdf5Double(string dataset_name, string id, int NX, int NY, int NZ) {
+void ReadHdf5Double(string dataset_name, string csv_name, string id, int NX, int NY, int NZ) {
   string path = prefix_path + dataset_name + id + ".h5";
   cout << path << " " << dataset_name << endl;
   H5std_string FILE_NAME(path);
-  H5std_string DATASET_NAME(dataset_name);
+  H5std_string DATASET_NAME(csv_name);
   int size = NX * NY * NZ;
   double *data_read = new double [size];
   memset(data_read, 0, sizeof(double) * size);
@@ -137,7 +138,7 @@ void ReadHdf5Double(string dataset_name, string id, int NX, int NY, int NZ) {
   DataSet dataset = file.openDataSet(DATASET_NAME);
   DataSpace dataspace = dataset.getSpace();
   int rank = dataspace.getSimpleExtentNdims();
-  hsize_t dims_out[3];
+  hsize_t dims_out[3] = {1, 1, 1};
   dataspace.getSimpleExtentDims(dims_out, NULL);
 
   printf("rank %d, shape (%llu, %llu, %llu)\n", rank, dims_out[0], dims_out[1], dims_out[2]);
@@ -156,6 +157,7 @@ void ReadHdf5Double(string dataset_name, string id, int NX, int NY, int NZ) {
   dimsm[0] = NX;
   dimsm[1] = NY;
   dimsm[2] = NZ;
+  for (int i = 0; i < 3; ++i) cout << dimsm[i] << " " << dims_out[i] << endl;
   for (int i = 0; i < 3; ++i) assert(dimsm[i] == dims_out[i]);
   DataSpace memspace(RANK_OUT, dimsm);
 
@@ -203,7 +205,7 @@ void OutputOrderBinaryFile(int stk_id) {
   assert(kN % kSplitN == 0);
   int length = kN / kSplitN;
   for (int i = 0; i < kSplitN; ++i) {
-    string binary_file_path = output_prefix_path + "order" + trade_id + "/" "stock" + to_string(stk_id) +  "_" + to_string(i + 1);
+    string binary_file_path = output_prefix_path + "test" + trade_id + "/" "stock" + to_string(stk_id + 1) +  "_" + to_string(i + 1);
     cout << "binary_file_path=" << binary_file_path << endl;
     std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
 
@@ -216,7 +218,7 @@ void OutputOrderBinaryFile(int stk_id) {
 
 
 void OutputIntBinaryFile(vector<int> &V, string file_name) {
-  string binary_file_path = output_prefix_path + "order" + trade_id + "/" + file_name; 
+  string binary_file_path = output_prefix_path + "test" + trade_id + "/" + file_name; 
   std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
   for (auto v : V) {
     outfile.write((char *)(&v), sizeof(int));
@@ -237,7 +239,7 @@ int main(int argc,char **argv) {
     
   for (auto dataset_name : dataset_name_vec)
     ReadHdf5Int(dataset_name, dataset_name, trade_id, NX, NY, NZ);
-  ReadHdf5Double("price", trade_id, NX, NY, NZ);
+  ReadHdf5Double("price", "price", trade_id, NX, NY, NZ);
   ReadHdf5Int("price", "prev_close", trade_id, kStkN, 1, 1);
   ReadHdf5Int("hook", "hook", "", kStkN, 100, 4);
   QuickSort();

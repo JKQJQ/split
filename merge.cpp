@@ -9,13 +9,12 @@ int NY = 10;
 int NZ = 10; 
 const int kStkN = 10;
 int kN = NX * NY * NZ / kStkN;
-vector<int> prev_close(kStkN);
 Order* order_stk[2]; 
 
 void ReadOrderBinaryFile(string file_path, Order* order_stk, int id) {
   int length = kN / kSplitN;
   for (int i = 0; i < kSplitN; ++i) {
-      string stk_file_path = file_path + "stock" + to_string(id) + "_" + to_string(i + 1);
+      string stk_file_path = file_path + "stock" + to_string(id + 1) + "_" + to_string(i + 1);
       cout << "stk_file_path=" << stk_file_path << endl;
       std::ifstream infile(stk_file_path, std::ios::in | std::ios::binary);
       infile.read((char *)(order_stk + length * i), sizeof(Order) * length);
@@ -48,14 +47,13 @@ void Merge(Order* order_stk1, Order* order_stk2, string file_path, int stk_id) {
       }
     }
   }
-  cout << i << "  " << j << " " << k <<  " " << kN << endl;
   assert(k == i + j);
   assert(k == kN * 2);
   for (i = 0; i < kN * 2; ++i) {
     bool output_flag = i < 3;
     OutputOrder(merge_order_stk[i], output_flag, kN);
   }
-  string stk_file_path = file_path + "stock" + to_string(stk_id);
+  string stk_file_path = file_path + "stock" + to_string(stk_id + 1);
   std::ofstream outfile(stk_file_path, std::ios::out | std::ios::binary);
   outfile.write((char *)merge_order_stk, sizeof(Order) * kN * 2);
   outfile.close(); 
@@ -68,10 +66,10 @@ int main(int argc, char **argv) {
   NZ = atoi(argv[3]);
   kN = NX * NY * NZ / kStkN;
 
-  string path1 = prefix_path + "order1/";
-  string path2 = prefix_path + "order2/";       
+  string path1 = prefix_path + "test1/";
+  string path2 = prefix_path + "test2/";       
   string output_path = prefix_path + "order_merge/";
-
+  //string output_path = "/data/team-10/large/order_merge/";
   for (int i = 0; i < kStkN; ++i) { 
     for (int j = 0; j < 2; ++j) {
         order_stk[j] = new  Order[kN];
