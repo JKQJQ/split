@@ -25,7 +25,7 @@ static void compress_orDie(const char* fname, const char* oname)
      * If you are doing many compressions, you may want to reuse the context.
      * See the multiple_simple_compression.c example.
      */
-    size_t const cSize = ZSTD_compress(cBuff, cBuffSize, fBuff, fSize, 1);
+    size_t const cSize = ZSTD_compress(cBuff, cBuffSize, fBuff, fSize, 3);
     printf("cSize=%d\n", cSize);
     CHECK_ZSTD(cSize);
 

@@ -1,9 +1,9 @@
 #!/bin/bash
 ######## VARIABLES ################
-INPUT_ORDER_FILE_1=/data/team-10/small/test1/
-INPUT_ORDER_FILE_2=/data/team-10/small/test2/
-OUTPUT_ORDER_MERGE_FILE=/data/team-10/small/order_merge/
-N=10 #small: 10 medium: 100 large:1000
+INPUT_ORDER_FILE_1=/data/team-10/large/test1/
+INPUT_ORDER_FILE_2=/data/team-10/large/test2/
+OUTPUT_ORDER_MERGE_FILE=/data/team-10/large/order_merge/
+N=1000 #small: 10 medium: 100 large:1000
 ######### END ###############
 cmake .
 make
