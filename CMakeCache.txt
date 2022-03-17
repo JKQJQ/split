@@ -270,11 +270,17 @@ HDF5_DIFF_EXECUTABLE:FILEPATH=/opt/anaconda3/bin/h5diff
 //The directory containing a CMake configuration file for HDF5.
 HDF5_DIR:PATH=HDF5_DIR-NOTFOUND
 
+//The directory containing a CMake configuration file for ZSTD.
+ZSTD_DIR:PATH=ZSTD_DIR-NOTFOUND
+
 //Value Computed by CMake
 split_BINARY_DIR:STATIC=/home/team-10/split
 
 //Value Computed by CMake
 split_SOURCE_DIR:STATIC=/home/team-10/split
+
+//The directory containing a CMake configuration file for zstd.
+zstd_DIR:PATH=/opt/anaconda3/lib/cmake/zstd
 
 
 ########################

@@ -1,6 +1,8 @@
 #include<iostream>
 using namespace std;
 #define Test 1
+const string SUCCESS_FILE_EXTENSION = ".success";
+const string COMPRESS_TYPE = ".zst";
 struct Trade {
     int stk_code;
     int bid_id;

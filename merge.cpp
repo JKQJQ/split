@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include "decompress.h"
 #include "common.h"
 
 using namespace std;
@@ -16,13 +17,16 @@ void ReadOrderBinaryFile(string file_path, Order* order_stk, int id) {
   for (int i = 0; i < kSplitN; ++i) {
       string stk_file_path = file_path + "stock" + to_string(id + 1) + "_" + to_string(i + 1);
       cout << "stk_file_path=" << stk_file_path << endl;
-      std::ifstream infile(stk_file_path, std::ios::in | std::ios::binary);
-      infile.read((char *)(order_stk + length * i), sizeof(Order) * length);
-      infile.close();
+      int size = 0;
+      start_decompress((stk_file_path + ".zst").c_str(), (void*)(order_stk + length * i), &size);
+      assert(size == length * sizeof(Order));
+      // std::ifstream infile(stk_file_path, std::ios::in | std::ios::binary);
+      // infile.read((char *)(order_stk + length * i), sizeof(Order) * length);
+      // infile.close();
   }
 
 }
-void Merge(Order* order_stk1, Order* order_stk2, string file_path, int stk_id) {
+void          Merge(Order* order_stk1, Order* order_stk2, string file_path, int stk_id) {
   Order* merge_order_stk = new Order[kN * 2];
   // for (int i = 0; i < kN; ++i) merge_order_stk[i] = order_stk1[i];
   // for (int i = 0; i < kN; ++i) merge_order_stk[i + kN] = order_stk2[i];
@@ -54,6 +58,7 @@ void Merge(Order* order_stk1, Order* order_stk2, string file_path, int stk_id) {
     OutputOrder(merge_order_stk[i], output_flag, kN);
   }
   string stk_file_path = file_path + "stock" + to_string(stk_id + 1);
+  cout << "OUTPUT_FILE=" << stk_file_path <<endl;
   std::ofstream outfile(stk_file_path, std::ios::out | std::ios::binary);
   outfile.write((char *)merge_order_stk, sizeof(Order) * kN * 2);
   outfile.close(); 
@@ -61,14 +66,15 @@ void Merge(Order* order_stk1, Order* order_stk2, string file_path, int stk_id) {
 } 
 
 int main(int argc, char **argv) {
-  string prefix_path = argv[1];  //"/Users/gjy/JK_Contest/split/";
-  NY = atoi(argv[2]);
-  NZ = atoi(argv[3]);
+  string path1 = argv[1];
+  string path2 = argv[2];     
+  string output_path = argv[3];
+  cout << path1 << " " << path2 << " " << output_path << endl;
+  NY = atoi(argv[4]);
+  NZ = atoi(argv[5]);
   kN = NX * NY * NZ / kStkN;
 
-  string path1 = prefix_path + "test1/";
-  string path2 = prefix_path + "test2/";       
-  string output_path = prefix_path + "order_merge/";
+
   //string output_path = "/data/team-10/large/order_merge/";
   for (int i = 0; i < kStkN; ++i) { 
     for (int j = 0; j < 2; ++j) {

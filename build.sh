@@ -1,41 +1,18 @@
-data_path="team-10/"
+#!/bin/bash
+######## VARIABLES ################
+SPLIT_FILE=/data/100x1000x1000/
+TRADER_ID=1
+OUTPUT_FILE=/data/team-10/large/test${TRADER_ID}
+N=1000 #small: 10 medium: 100 large:1000
+######### END ###############
 
-echo "Enter Your File Path:"
-prefix_path='/data/'
-echo "Enter Your File Size (small/medium/large):"
-read Size
-
-N="10"
-if  [ "$Size" == "small" ]
-then N="10"
-fi
-if  [ "$Size" == "medium" ]
-then N="100"
-fi
-if  [ "$Size" == "large" ]
-then N="1000"
-fi
-echo "${prefix_path}"
-echo "${Size}"
-echo "${N}"
-data_path="${data_path}${Size}/"
-echo "${data_path}"
+######## TEST_VARIABLES ################
+ANNOTHE_TRADER_ID=2
+ANOTHER_OUTPUT_FILE=/data/team-10/large/test${ANNOTHE_TRADER_ID}
+######### END ###############
 cmake .
 make
-./split "${prefix_path}100x${N}x${N}/" "1" "${prefix_path}${data_path}" "${N}" "${N}"
-#./split "${prefix_path}100x${N}x${N}/" "2" "${prefix_path}${data_path}" "${N}" "${N}"
+./split ${SPLIT_FILE} ${TRADER_ID} ${OUTPUT_FILE} ${N}  ${N}
+./split ${SPLIT_FILE} ${ANNOTHE_TRADER_ID} ${ANOTHER_OUTPUT_FILE} ${N}  ${N}
 
 
-zstd -T4 /data/team-10/large/test1/stock* --output-dir-flat /data/team-10/large/test1_compress/
-path="${prefix_path}${data_path}test1_compress/"
-cd ${path}
-
-rm -rf *.success
-for ((i=1;i < 11; i++))
-do
-    for ((j=1;j < 51; j++))
-    do
-        touch "stock${i}_${j}.zst.success"
-        echo success > "stock${i}_${j}.zst.success"
-    done
-done

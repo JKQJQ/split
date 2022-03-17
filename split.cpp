@@ -1,9 +1,8 @@
 #include <iostream>
-#include <cstring>
 #include <bits/stdc++.h>
 #include "H5Cpp.h"
 #include "common.h"
-// #include "split.h"
+#include "compress.h"
 using namespace H5;
 using namespace std;
 
@@ -205,20 +204,24 @@ void OutputOrderBinaryFile(int stk_id) {
   assert(kN % kSplitN == 0);
   int length = kN / kSplitN;
   for (int i = 0; i < kSplitN; ++i) {
-    string binary_file_path = output_prefix_path + "test" + trade_id + "/" "stock" + to_string(stk_id + 1) +  "_" + to_string(i + 1);
+    string binary_file_path = output_prefix_path + "/" "stock" + to_string(stk_id + 1) +  "_" + to_string(i + 1);
     cout << "binary_file_path=" << binary_file_path << endl;
     std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
-
-
     outfile.write((char *)(&order_stk[stk_id][length * i]), sizeof(Order) * length);
     outfile.close(); 
+    start_compress(binary_file_path);
+    // mark as successful
+    auto successFlagPath =   binary_file_path + COMPRESS_TYPE;
+    successFlagPath += SUCCESS_FILE_EXTENSION;
+    std::ofstream outFileSuccess(successFlagPath, std::ios::out | std::ios::binary);
+    outFileSuccess.write("success", 8);
   }
 
 }
 
 
 void OutputIntBinaryFile(vector<int> &V, string file_name) {
-  string binary_file_path = output_prefix_path + "test" + trade_id + "/" + file_name; 
+  string binary_file_path = output_prefix_path + "/" + file_name; 
   std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
   for (auto v : V) {
     outfile.write((char *)(&v), sizeof(int));
