@@ -13,28 +13,29 @@
 #include <string.h>    // strlen, strcat, memset
 #include <zstd.h>      // presumes zstd library is installed
 #include "compress_common.h"  // Helper functions, CHECK(), and CHECK_ZSTD()
-static void compress_orDie(const char* fname, const char* oname)
+static void compress_orDie(void* const fBuff, int inputSize, const char* oname)
 {
-    size_t fSize;
-    void* const fBuff = mallocAndLoadFile_orDie(fname, &fSize);
-    size_t const cBuffSize = ZSTD_compressBound(fSize);
+    size_t fSize = inputSize;
+    //void* const fBuff = mallocAndLoadFile_orDie(fname, &fSize);
+    //size_t const cBuffSize = ZSTD_compressBound(fSize);
+    size_t const cBuffSize = inputSize;
     printf("cBuffSize=%d fSize=%d\n", cBuffSize, fSize);
     void* const cBuff = malloc_orDie(cBuffSize);
+
 
     /* Compress.
      * If you are doing many compressions, you may want to reuse the context.
      * See the multiple_simple_compression.c example.
      */
     size_t const cSize = ZSTD_compress(cBuff, cBuffSize, fBuff, fSize, 3);
-    printf("cSize=%d\n", cSize);
     CHECK_ZSTD(cSize);
 
     saveFile_orDie(oname, cBuff, cSize);
 
     /* success */
-    printf("%25s : %6u -> %7u - %s \n", fname, (unsigned)fSize, (unsigned)cSize, oname);
-
-    free(fBuff);
+    printf("%6u -> %7u - %s \n", (unsigned)fSize, (unsigned)cSize, oname);
+    assert(fSize = inputSize);
+    //free(fBuff);
     free(cBuff);
 }
 
@@ -49,7 +50,7 @@ static char* createOutFilename_orDie(const char* filename)
     return (char*)outSpace;
 }
 
-void start_compress(string filename)
+void start_compress(void* const fBuff, int inputSize, string filename)
 {
 
     // if (argc!=2) {
@@ -62,6 +63,6 @@ void start_compress(string filename)
     const char* const inFilename = filename.c_str();
 
     char* const outFilename = createOutFilename_orDie(inFilename);
-    compress_orDie(inFilename, outFilename);
+    compress_orDie(fBuff, inputSize, outFilename);
     free(outFilename);
 }

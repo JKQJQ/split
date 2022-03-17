@@ -205,11 +205,11 @@ void OutputOrderBinaryFile(int stk_id) {
   int length = kN / kSplitN;
   for (int i = 0; i < kSplitN; ++i) {
     string binary_file_path = output_prefix_path + "/" "stock" + to_string(stk_id + 1) +  "_" + to_string(i + 1);
-    cout << "binary_file_path=" << binary_file_path << endl;
-    std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
-    outfile.write((char *)(&order_stk[stk_id][length * i]), sizeof(Order) * length);
-    outfile.close(); 
-    start_compress(binary_file_path);
+    // cout << "binary_file_path=" << binary_file_path << endl;
+    // std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
+    // outfile.write((char *)(&order_stk[stk_id][length * i]), sizeof(Order) * length);
+    // outfile.close(); 
+    start_compress((void *)(&order_stk[stk_id][length * i]), sizeof(Order) * length, binary_file_path);
     // mark as successful
     auto successFlagPath =   binary_file_path + COMPRESS_TYPE;
     successFlagPath += SUCCESS_FILE_EXTENSION;
