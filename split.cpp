@@ -3,6 +3,7 @@
 #include "H5Cpp.h"
 #include "common.h"
 #include "compress.h"
+#include <unistd.h>
 using namespace H5;
 using namespace std;
 
@@ -14,11 +15,11 @@ int NZ = 1000;
 const int kStkN = 10;
 int kN = NX * NY * NZ / kStkN;
 const int RANK_OUT = 3;
-string prefix_path = "/Users/gjy/JK_Contest/split/100x10x10/";
-string output_prefix_path = "/Users/gjy/JK_Contest/split/";
+string prefix_path = "";
+string output_prefix_path = "";
 string trade_id = "1";
-
-vector<vector<Order>> order_stk;
+string output_cuo_path = "";
+vector<Order> order_stk[kStkN];
 vector<int> prev_close(kStkN);
 vector<int> hook(kStkN * 100 * 4);
 void QuickSort() {
@@ -122,6 +123,10 @@ void ReadHdf5Int(
     }
   }
   delete[] data_read;  
+  dataspace.close();
+  //datatype.close();
+  dataset.close();
+  file.close();  
 }
 
 void ReadHdf5Double(string dataset_name, string csv_name, string id, int NX, int NY, int NZ) {
@@ -190,7 +195,11 @@ void ReadHdf5Double(string dataset_name, string csv_name, string id, int NX, int
       }
     }
   }
-  delete[] data_read;  
+  delete[] data_read;
+  dataspace.close();
+  //datatype.close();
+  dataset.close();
+  file.close();  
 }
 
 void OutputOrderBinaryFile(int stk_id) {
@@ -218,10 +227,33 @@ void OutputOrderBinaryFile(int stk_id) {
   }
 
 }
-
+void ReadHdf5(
+  string dataset_name, 
+  string csv_name, 
+  string id, 
+  int NX, 
+  int NY, 
+  int NZ
+) {
+  string path = prefix_path + dataset_name + id + ".h5";
+  H5std_string FILE_NAME(path);
+  H5std_string DATASET_NAME(csv_name);
+  H5File file(FILE_NAME, H5F_ACC_RDONLY);
+  DataSet dataset = file.openDataSet(DATASET_NAME);
+  DataType datatype = dataset.getDataType();
+  H5T_class_t classt = datatype.getClass();
+  cout << "class_t=" << classt << endl;
+  assert(classt < 2);
+  if (classt == 0) ReadHdf5Int(dataset_name, csv_name, id, NX, NY, NZ);
+  if (classt == 1) ReadHdf5Double(dataset_name, csv_name, id, NX, NY, NZ);
+  datatype.close();
+  dataset.close();
+  file.close();  
+}
 
 void OutputIntBinaryFile(vector<int> &V, string file_name) {
-  string binary_file_path = output_prefix_path + "/" + file_name; 
+  string binary_file_path = output_cuo_path + "/" + file_name; 
+  cout << binary_file_path << endl;
   std::ofstream outfile(binary_file_path, std::ios::out | std::ios::binary);
   for (auto v : V) {
     outfile.write((char *)(&v), sizeof(int));
@@ -234,24 +266,38 @@ int main(int argc,char **argv) {
   prefix_path = argv[1];
   trade_id = argv[2];
   output_prefix_path = argv[3];
-  NY = atoi(argv[4]);
-  NZ = atoi(argv[5]);
+  output_cuo_path = argv[4];
+  NY = atoi(argv[5]);
+  NZ = atoi(argv[6]);
+  assert(argc == 7);
   kN = NX * NY * NZ / kStkN;
-  order_stk = vector<vector<Order>>(kStkN, vector<Order>(kN));
+  for (int i = 0; i < kStkN; ++i) {
+    order_stk[i] = vector<Order>(kN);
+  }
+  
   vector<string> dataset_name_vec{"order_id", "direction", "type", "volume"};
     
+  // for (auto dataset_name : dataset_name_vec)
+  //   ReadHdf5Int(dataset_name, dataset_name, trade_id, NX, NY, NZ);
+  // ReadHdf5Double("price", "price", trade_id, NX, NY, NZ);
+  // ReadHdf5Int("price", "prev_close", trade_id, kStkN, 1, 1);
+  // ReadHdf5Int("hook", "hook", "", kStkN, 100, 4);
   for (auto dataset_name : dataset_name_vec)
-    ReadHdf5Int(dataset_name, dataset_name, trade_id, NX, NY, NZ);
-  ReadHdf5Double("price", "price", trade_id, NX, NY, NZ);
-  ReadHdf5Int("price", "prev_close", trade_id, kStkN, 1, 1);
-  ReadHdf5Int("hook", "hook", "", kStkN, 100, 4);
+    ReadHdf5(dataset_name, dataset_name, trade_id, NX, NY, NZ);
+  ReadHdf5("price", "price", trade_id, NX, NY, NZ);
+  ReadHdf5("price", "prev_close", trade_id, kStkN, 1, 1);
+  ReadHdf5("hook", "hook", "", kStkN, 100, 4);
   QuickSort();
 
   for (int i = 0; i < kStkN; ++i)
     OutputOrderBinaryFile(i);
   OutputIntBinaryFile(prev_close, "prev_price");
   OutputIntBinaryFile(hook, "hook");
-  for (int i = 0; i < 10; ++i) cout << hook[i] << endl;
+  for (int i = 0; i < kStkN; ++i) {
+    cout << "prev_close=" << prev_close[i] << endl;
+  }
+
+
   return 0;
 }
 

@@ -24,9 +24,9 @@ void ReadOrderBinaryFile(string file_path, Order* order_stk, int id) {
       // infile.read((char *)(order_stk + length * i), sizeof(Order) * length);
       // infile.close();
   }
-
 }
-void          Merge(Order* order_stk1, Order* order_stk2, string file_path, int stk_id) {
+
+void Merge(Order* order_stk1, Order* order_stk2, string file_path, int stk_id) {
   Order* merge_order_stk = new Order[kN * 2];
   // for (int i = 0; i < kN; ++i) merge_order_stk[i] = order_stk1[i];
   // for (int i = 0; i < kN; ++i) merge_order_stk[i + kN] = order_stk2[i];
@@ -62,7 +62,7 @@ void          Merge(Order* order_stk1, Order* order_stk2, string file_path, int 
   std::ofstream outfile(stk_file_path, std::ios::out | std::ios::binary);
   outfile.write((char *)merge_order_stk, sizeof(Order) * kN * 2);
   outfile.close(); 
-  delete merge_order_stk;
+  delete[] merge_order_stk;
 } 
 
 int main(int argc, char **argv) {
