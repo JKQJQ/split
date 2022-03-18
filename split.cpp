@@ -49,22 +49,22 @@ void CountingSort() {
 }
 
 void ReadHdf5Int(
-  string dataset_name, 
+  H5File &file,
+  DataSet &dataset,
   string csv_name, 
-  string id, 
   int NX, 
   int NY, 
   int NZ
   ) {
-  string path = prefix_path + dataset_name + id + ".h5";
-  H5std_string FILE_NAME(path);
-  H5std_string DATASET_NAME(csv_name);
+  // string path = prefix_path + dataset_name + id + ".h5";
+  // H5std_string FILE_NAME(path);
+  // H5std_string DATASET_NAME(csv_name);
   int size = NX * NY * NZ;
   int *data_read = new int [size];
   memset(data_read, 0, sizeof(int) * size);
 
-  H5File file(FILE_NAME, H5F_ACC_RDONLY);
-  DataSet dataset = file.openDataSet(DATASET_NAME);
+  // H5File file(FILE_NAME, H5F_ACC_RDONLY);
+  // DataSet dataset = file.openDataSet(DATASET_NAME);
   DataSpace dataspace = dataset.getSpace();
   int rank = dataspace.getSimpleExtentNdims();
   hsize_t dims_out[3] = {1, 1, 1};
@@ -103,43 +103,71 @@ void ReadHdf5Int(
   dataset.read(data_read, PredType::NATIVE_INT, memspace, dataspace);
   //read from file to memory, you can set offset in memory space
 
-  vector<int> stk[kStkN];
+  // vector<int> stk[kStkN];
+  // for (int i = 0; i < kStkN; ++i) {
+  //   stk[i].reserve(kN);
+  // }
+
+  // for (int i = 0; i < dims_out[0]; ++i) {
+  //   for (int j = 0; j < dims_out[1]; ++j) {
+  //     for (int k = 0; k < dims_out[2]; ++k) {
+  //       int stk_code = i % kStkN;
+  //       stk[stk_code].push_back(data_read[i * dims_out[1] * dims_out[2] + j * dims_out[2] + k]);
+  //     }
+  //   }     
+  // }
+  // for (int i = 0; i < kStkN; ++i) {
+  //   for (int j = 0; j < stk[i].size(); ++j) {
+  //     if (csv_name == "order_id") order_stk[i][j].order_id = stk[i][j];
+  //     if (csv_name == "volume") order_stk[i][j].volume = stk[i][j];
+  //     if (csv_name == "direction") order_stk[i][j].combined |= (stk[i][j] == 1?1:0) << 3;
+  //     if (csv_name == "type") order_stk[i][j].combined |= stk[i][j];
+  //     if (csv_name == "prev_close") prev_close[i] = round(stk[i][j] * 100);
+  //     if (csv_name == "hook") hook[i * 100 * 4 + j] = stk[i][j];
+  //   }
+  // }
+
   for (int i = 0; i < dims_out[0]; ++i) {
     for (int j = 0; j < dims_out[1]; ++j) {
       for (int k = 0; k < dims_out[2]; ++k) {
+        int id = (i * dims_out[1] * dims_out[2] + j * dims_out[2] + k);
         int stk_code = i % kStkN;
-        stk[stk_code].push_back(data_read[i * dims_out[1] * dims_out[2] + j * dims_out[2] + k]);
+        int next = id / (kStkN * NY * NZ) * NY * NZ + id % (NY * NZ);
+        //cout << id << " " << stk_code << " " << next <<  " "<<  kN  <<" " << data_read[id] << endl;
+        if (csv_name == "order_id") order_stk[stk_code][next].order_id = data_read[id];
+        if (csv_name == "volume") order_stk[stk_code][next].volume = data_read[id];
+        if (csv_name == "direction") order_stk[stk_code][next].combined |= (data_read[id] == 1?1:0) << 3;
+        if (csv_name == "type") order_stk[stk_code][next].combined |= data_read[id];
+        if (csv_name == "hook") hook[stk_code * 100 * 4 + next] = data_read[id];
+        if (csv_name == "prev_close") prev_close[stk_code] = round(data_read[id]  * 100);
       }
     }     
-  }
-  for (int i = 0; i < kStkN; ++i) {
-    for (int j = 0; j < stk[i].size(); ++j) {
-      if (csv_name == "order_id") order_stk[i][j].order_id = stk[i][j];
-      if (csv_name == "volume") order_stk[i][j].volume = stk[i][j];
-      if (csv_name == "direction") order_stk[i][j].combined |= (stk[i][j] == 1?1:0) << 3;
-      if (csv_name == "type") order_stk[i][j].combined |= stk[i][j];
-      if (csv_name == "prev_close") prev_close[i] = round(stk[i][j] * 100);
-      if (csv_name == "hook") hook[i * 100 * 4 + j] = stk[i][j];
-    }
   }
   delete[] data_read;  
   dataspace.close();
   //datatype.close();
-  dataset.close();
-  file.close();  
+  // dataset.close();
+  // file.close();  
 }
 
-void ReadHdf5Double(string dataset_name, string csv_name, string id, int NX, int NY, int NZ) {
-  string path = prefix_path + dataset_name + id + ".h5";
-  cout << path << " " << dataset_name << endl;
-  H5std_string FILE_NAME(path);
-  H5std_string DATASET_NAME(csv_name);
+void ReadHdf5Double(
+  H5File &file,
+  DataSet &dataset,
+  string csv_name, 
+  int NX, 
+  int NY, 
+  int NZ
+) {
+  // string path = prefix_path + dataset_name + id + ".h5";
+  // cout << path << " " << dataset_name << endl;
+  // H5std_string FILE_NAME(path);
+  // H5std_string DATASET_NAME(csv_name);
   int size = NX * NY * NZ;
   double *data_read = new double [size];
   memset(data_read, 0, sizeof(double) * size);
 
-  H5File file(FILE_NAME, H5F_ACC_RDONLY);
-  DataSet dataset = file.openDataSet(DATASET_NAME);
+  // H5File file(FILE_NAME, H5F_ACC_RDONLY);
+  // DataSet dataset = file.openDataSet(DATASET_NAME);
   DataSpace dataspace = dataset.getSpace();
   int rank = dataspace.getSimpleExtentNdims();
   hsize_t dims_out[3] = {1, 1, 1};
@@ -161,7 +189,7 @@ void ReadHdf5Double(string dataset_name, string csv_name, string id, int NX, int
   dimsm[0] = NX;
   dimsm[1] = NY;
   dimsm[2] = NZ;
-  for (int i = 0; i < 3; ++i) cout << dimsm[i] << " " << dims_out[i] << endl;
+  for (int i = 0; i < 3; ++i) cout << "dim=" << " " << dimsm[i] << " " << dims_out[i] << endl;
   for (int i = 0; i < 3; ++i) assert(dimsm[i] == dims_out[i]);
   DataSpace memspace(RANK_OUT, dimsm);
 
@@ -178,29 +206,55 @@ void ReadHdf5Double(string dataset_name, string csv_name, string id, int NX, int
   dataset.read(data_read, PredType::NATIVE_DOUBLE, memspace, dataspace);
   //read from file to memory, you can set offset in memory space
 
-  vector<double> stk[kStkN];
+  // vector<double> stk[kStkN];
+  // for (int i = 0; i < kStkN; ++i) {
+  //   stk[i].reserve(kN);
+  // }
+
+  // for (int i = 0; i < dims_out[0]; ++i) {
+  //   for (int j = 0; j < dims_out[1]; ++j) {
+  //     for (int k = 0; k < dims_out[2]; ++k) {
+  //       int stk_code = i % kStkN;
+  //       //stk[i % kStkN][i * dims_out[1] * dims_out[2] + j * dims_out[2] + k]
+  //       // == data_read[i * dims_out[1] * dims_out[2] + j * dims_out[2] + k]
+  //       stk[stk_code].push_back(data_read[i * dims_out[1] * dims_out[2] + j * dims_out[2] + k]);
+  //     }
+  //   }     
+  // }
+  // for (int i = 0; i < kStkN; ++i) {
+  //   for (int j = 0; j < stk[i].size(); ++j) {
+  //     if (csv_name == "price") {
+  //       order_stk[i][j].combined |=  i << 4;
+  //       order_stk[i][j].price = round(stk[i][j] * 100); //floor 0.01
+  //     }
+  //     if (csv_name == "prev_close") prev_close[i] = round(stk[i][j] * 100);
+  //   }
+  // }
+
   for (int i = 0; i < dims_out[0]; ++i) {
     for (int j = 0; j < dims_out[1]; ++j) {
       for (int k = 0; k < dims_out[2]; ++k) {
+        int id = (i * dims_out[1] * dims_out[2] + j * dims_out[2] + k);
         int stk_code = i % kStkN;
-        stk[stk_code].push_back(data_read[i * dims_out[1] * dims_out[2] + j * dims_out[2] + k]);
+        int next = id / (kStkN * NY * NZ) * NY * NZ + id % (NY * NZ);
+        //cout << id << " " << stk_code << " " << next <<  " "<<  kN  <<" " << data_read[id] << endl;
+        //stk[i % kStkN][i * dims_out[1] * dims_out[2] + j * dims_out[2] + k]
+        // == data_read[i * dims_out[1] * dims_out[2] + j * dims_out[2] + k]
+        // stk[stk_code].push_back(data_read[i * dims_out[1] * dims_out[2] + j * dims_out[2] + k]);
+
+        if (csv_name == "price") {
+          order_stk[stk_code][next].combined |=  stk_code << 4;
+          order_stk[stk_code][next].price = round(data_read[id] * 100); //floor 0.01
+        }
+        if (csv_name == "prev_close") prev_close[stk_code] = round(data_read[id]  * 100);
       }
     }     
-  }
-  for (int i = 0; i < kStkN; ++i) {
-    for (int j = 0; j < stk[i].size(); ++j) {
-      if (dataset_name == "price") {
-        order_stk[i][j].combined |=  i << 4;
-        order_stk[i][j].price = round(stk[i][j] * 100); //floor 0.01
-      }
-      if (csv_name == "prev_close") prev_close[i] = round(stk[i][j] * 100);
-    }
   }
   delete[] data_read;
   dataspace.close();
   //datatype.close();
-  dataset.close();
-  file.close();  
+  // dataset.close();
+  // file.close();  
 }
 
 void OutputOrderBinaryFile(int stk_id) {
@@ -245,8 +299,8 @@ void ReadHdf5(
   H5T_class_t classt = datatype.getClass();
   cout << "class_t=" << classt << endl;
   assert(classt < 2);
-  if (classt == 0) ReadHdf5Int(dataset_name, csv_name, id, NX, NY, NZ);
-  if (classt == 1) ReadHdf5Double(dataset_name, csv_name, id, NX, NY, NZ);
+  if (classt == 0) ReadHdf5Int(file, dataset, csv_name,  NX, NY, NZ);
+  if (classt == 1) ReadHdf5Double(file, dataset, csv_name, NX, NY, NZ);
   datatype.close();
   dataset.close();
   file.close();  
