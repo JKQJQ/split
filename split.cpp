@@ -193,6 +193,7 @@ void ReadHdf5Double(string dataset_name, string csv_name, string id, int NX, int
         order_stk[i][j].combined |=  i << 4;
         order_stk[i][j].price = round(stk[i][j] * 100); //floor 0.01
       }
+      if (csv_name == "prev_close") prev_close[i] = round(stk[i][j] * 100);
     }
   }
   delete[] data_read;
