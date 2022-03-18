@@ -25,6 +25,7 @@ make
 echo ${OUTPUT_ORDER_MERGE_FILE}
 cd ${CUO_PATH}
 g++ merge_cuo.cpp -o merge_cuo -O2 
+mkdir ${OUTPUT_CUO_PATH}
 ./merge_cuo ${OUTPUT_ORDER_MERGE_FILE} ${OUTPUT_CUO_PATH}
 cmp -l /data/team-10/my_ans_large/trade1 /data/100x1000x1000/trade1
 cmp -l /data/team-10/my_ans_large/trade2 /data/100x1000x1000/trade2

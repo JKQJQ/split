@@ -22,6 +22,7 @@ ANOTHER_OUTPUT_FILE=/data/team-10/large/test${ANNOTHE_TRADER_ID}
 ######### END ###############
 cmake .
 make
+mkdir ${OUTPUT_FILE}
 ./split ${SPLIT_FILE} ${TRADER_ID} ${OUTPUT_FILE} ${OUTPUT_CUO_FILE} ${N}  ${N}
 ./split ${SPLIT_FILE} ${ANNOTHE_TRADER_ID} ${ANOTHER_OUTPUT_FILE} ${OUTPUT_CUO_FILE} ${N}  ${N}
 
