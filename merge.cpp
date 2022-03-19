@@ -17,7 +17,7 @@ void ReadOrderBinaryFile(string file_path, Order* order_stk, int id) {
   int length = kN / kSplitN;
   for (int i = 0; i < kSplitN; ++i) {
       string stk_file_path = file_path + "stock" + to_string(id + 1) + "_" + to_string(i + 1);
-      string stk_zst_file_path = stk_file_path + + ".zst";
+      string stk_zst_file_path = stk_file_path + COMPRESS_TYPE;
       string stk_zst_success_file_path = stk_zst_file_path + SUCCESS_FILE_EXTENSION;
       cout << "stk_zst_file_path=" << stk_zst_file_path << endl;
       while(!filesystem::exists(std::filesystem::path(stk_zst_success_file_path))) {
