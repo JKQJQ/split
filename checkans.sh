@@ -21,7 +21,7 @@ OUTPUT_CUO_PATH=/data/team-10/my_ans_large/
 cmake .
 make
 mkdir -p ${OUTPUT_ORDER_MERGE_FILE}
-# ./merge ${INPUT_ORDER_FILE_1} ${INPUT_ORDER_FILE_2}  ${OUTPUT_ORDER_MERGE_FILE} ${N} ${N}
+./merge ${INPUT_ORDER_FILE_1} ${INPUT_ORDER_FILE_2}  ${OUTPUT_ORDER_MERGE_FILE} ${N} ${N}
 
 cd ${CUO_PATH}
 mkdir -p ${OUTPUT_CUO_PATH}
