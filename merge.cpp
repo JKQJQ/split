@@ -22,7 +22,7 @@ void ReadOrderBinaryFile(string file_path, Order* order_stk, int id) {
       cout << "stk_zst_file_path=" << stk_zst_file_path << endl;
       while(!filesystem::exists(std::filesystem::path(stk_zst_success_file_path))) {
           cout << stk_zst_success_file_path << " doesn't exist, waiting...\n" << endl;
-          sleep(1);
+          sleep(2);
       }
 
       int size = 0;
