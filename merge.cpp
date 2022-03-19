@@ -1,7 +1,8 @@
 #include <bits/stdc++.h>
 #include "decompress.h"
 #include "common.h"
-
+#include <filesystem>
+#include <unistd.h>
 using namespace std;
 
 
@@ -16,9 +17,16 @@ void ReadOrderBinaryFile(string file_path, Order* order_stk, int id) {
   int length = kN / kSplitN;
   for (int i = 0; i < kSplitN; ++i) {
       string stk_file_path = file_path + "stock" + to_string(id + 1) + "_" + to_string(i + 1);
-      cout << "stk_file_path=" << stk_file_path << endl;
+      string stk_zst_file_path = stk_file_path + + ".zst";
+      string stk_zst_success_file_path = stk_zst_file_path + SUCCESS_FILE_EXTENSION;
+      cout << "stk_zst_file_path=" << stk_zst_file_path << endl;
+      while(!filesystem::exists(std::filesystem::path(stk_zst_success_file_path))) {
+          cout << stk_zst_success_file_path << " doesn't exist, waiting...\n" << endl;
+          sleep(1);
+      }
+
       int size = 0;
-      start_decompress((stk_file_path + ".zst").c_str(), (void*)(order_stk + length * i), &size);
+      start_decompress(stk_zst_file_path.c_str(), (void*)(order_stk + length * i), &size);
       assert(size == length * sizeof(Order));
       // std::ifstream infile(stk_file_path, std::ios::in | std::ios::binary);
       // infile.read((char *)(order_stk + length * i), sizeof(Order) * length);

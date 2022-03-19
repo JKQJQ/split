@@ -20,13 +20,14 @@ OUTPUT_CUO_PATH=/data/team-10/my_ans_large/
 # ######### END ###############
 cmake .
 make
-
+mkdir ${OUTPUT_ORDER_MERGE_FILE}
 ./merge ${INPUT_ORDER_FILE_1} ${INPUT_ORDER_FILE_2}  ${OUTPUT_ORDER_MERGE_FILE} ${N} ${N}
-echo ${OUTPUT_ORDER_MERGE_FILE}
+
 cd ${CUO_PATH}
 g++ merge_cuo.cpp -o merge_cuo -O2 
 mkdir ${OUTPUT_CUO_PATH}
 ./merge_cuo ${OUTPUT_ORDER_MERGE_FILE} ${OUTPUT_CUO_PATH}
+echo "Finish all tasks!!!"
 cmp -l /data/team-10/my_ans_large/trade1 /data/100x1000x1000/trade1
 cmp -l /data/team-10/my_ans_large/trade2 /data/100x1000x1000/trade2
 cmp -l /data/team-10/my_ans_large/trade3 /data/100x1000x1000/trade3
@@ -37,3 +38,4 @@ cmp -l /data/team-10/my_ans_large/trade7 /data/100x1000x1000/trade7
 cmp -l /data/team-10/my_ans_large/trade8 /data/100x1000x1000/trade8
 cmp -l /data/team-10/my_ans_large/trade9 /data/100x1000x1000/trade9
 cmp -l /data/team-10/my_ans_large/trade10 /data/100x1000x1000/trade10
+echo "Complete check all answers"
